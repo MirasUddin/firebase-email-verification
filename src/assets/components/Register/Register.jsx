@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
 import app from '../../firebase/firebase.config';
 import { Link } from 'react-router-dom';
 
@@ -15,6 +15,8 @@ const Register = () => {
         event.preventDefault();
         const email = event.target.email.value;
         const password = event.target.password.value;
+        const name = event.target.name.value;
+        console.log(name);
 
 
         // password validation
@@ -37,6 +39,7 @@ const Register = () => {
                 event.target.reset();
                 setSuccess('User has been created successfully');
                 sendVerificationEmail(result.user)
+                updateUserData(result.user, name)
             })
             .catch((error) => {
                 console.error(error.message);
@@ -49,6 +52,17 @@ const Register = () => {
             .then(() => {
                 alert('Please verify your email address')
             })
+    }
+    const updateUserData = (user, name) =>{
+        updateProfile(user, {
+            displayName: name
+        })
+        .then(()=>{
+            alert('user name updated')
+        })
+        .catch(error=>{
+            setError(error.message)
+        })
     }
 
     const handleEmailChange = (Event) => {
@@ -63,7 +77,7 @@ const Register = () => {
         <div>
             <h4>Please Register</h4>
             <form onSubmit={handleSubmit}>
-                <input className='w-50 mb-4 rounded ps-2' onChange={handleEmailChange} type="text" name="name" id="name" placeholder='Your Name' required />
+                <input className='w-50 mb-4 rounded ps-2'type="text" name="name" id="name" placeholder='Your Name' required />
                 <br />
                 <input className='w-50 mb-4 rounded ps-2' onChange={handleEmailChange} type="email" name="email" id="email" placeholder='Your Email' required />
                 <br />
