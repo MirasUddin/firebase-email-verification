@@ -11,61 +11,63 @@ const Register = () => {
 
 
 
-        const handleSubmit = (event) => {
-            event.preventDefault();
-            const email = event.target.email.value;
-            const password = event.target.password.value;
-        
-          
-            // password validation
-            if (!/(?=.*[!@#$%^&*])/.test(password)) {
-              setError('Please add at least one uppercase.');
-              return;
-            } else if (password.length < 6) {
-              setError('Please type at least 6 characters.');
-              return;
-            }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const email = event.target.email.value;
+        const password = event.target.password.value;
 
-            setError('')
-            setSuccess('')
-          
-            createUserWithEmailAndPassword(auth, email, password)
-              .then((result) => {
+
+        // password validation
+        if (!/(?=.*[!@#$%^&*])/.test(password)) {
+            setError('Please add at least one uppercase.');
+            return;
+        } else if (password.length < 6) {
+            setError('Please type at least 6 characters.');
+            return;
+        }
+
+        setError('')
+        setSuccess('')
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((result) => {
                 const loggedUser = result.user;
                 console.log(loggedUser);
                 setError('');
                 event.target.reset();
                 setSuccess('User has been created successfully');
                 sendVerificationEmail(result.user)
-              })
-              .catch((error) => {
+            })
+            .catch((error) => {
                 console.error(error.message);
                 setError(error.message);
-              });
-          };
-          
-    const sendVerificationEmail = user =>{
+            });
+    };
+
+    const sendVerificationEmail = user => {
         sendEmailVerification(user)
-        .then(() =>{
-            alert('Please verify your email address')
-        })
+            .then(() => {
+                alert('Please verify your email address')
+            })
     }
-          
-    const handleEmailChange = (Event) =>{
+
+    const handleEmailChange = (Event) => {
         // console.log(Event.target.value);
     }
 
-    const handlePasswordBlur= (event) =>{
+    const handlePasswordBlur = (event) => {
         // console.log(event.target.value);
     }
-    
+
     return (
         <div>
             <h4>Please Register</h4>
             <form onSubmit={handleSubmit}>
-                <input className='w-50 mb-4 rounded ps-2' onChange={handleEmailChange} type="email" name="email" id="email" placeholder='Your Email'  required/>
+                <input className='w-50 mb-4 rounded ps-2' onChange={handleEmailChange} type="text" name="name" id="name" placeholder='Your Name' required />
                 <br />
-                <input className='w-50 mb-4 rounded ps-2' onBlur={handlePasswordBlur} type="password" name="password" id="password" placeholder='Your Password'  required/>
+                <input className='w-50 mb-4 rounded ps-2' onChange={handleEmailChange} type="email" name="email" id="email" placeholder='Your Email' required />
+                <br />
+                <input className='w-50 mb-4 rounded ps-2' onBlur={handlePasswordBlur} type="password" name="password" id="password" placeholder='Your Password' required />
                 <br />
                 <input className='btn btn-primary' type="submit" value="Register" />
             </form>
